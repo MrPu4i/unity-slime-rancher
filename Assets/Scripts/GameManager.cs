@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -5,16 +6,21 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] GameObject[] shelter_walls;
     [SerializeField] TextMeshProUGUI text_money;
+    [SerializeField] TextMeshProUGUI text_wall_cost;
+    [SerializeField] InteractableButton inter_button;
 
-    private float money;
+    public float Money { get; set; }
     void Start()
     {
+        Console.WriteLine("лол");
         TurnOffWallsOnStart();
-        money = 100;
+        WallCost();
+        Money = 250;
     }
 
     void Update()
     {
+        Console.Write(inter_button.Cost);
         HowMuchMoney();
     }
     private void TurnOffWallsOnStart()
@@ -26,6 +32,10 @@ public class GameManager : MonoBehaviour
     }
     private void HowMuchMoney()
     {
-        text_money.text = $"{money}";
+        text_money.text = $"{Money}";
+    }
+    public void WallCost()
+    {
+        text_wall_cost.text = $"Стоимость стены: {inter_button.Cost}";
     }
 }

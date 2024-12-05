@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +9,15 @@ public class PlayerInteraction : MonoBehaviour
 
     [SerializeField] private Camera cam;
     [SerializeField] private float distance = 10f; //на каком расстоянии можем взаимодействовать с объектом
-
+    private Animator anim_text_wall_cost;
     Controls controls;
     InteractableObject io;
     [SerializeField] Image cursor;
 
     private void Start()
     {
+        Console.WriteLine("лол");
+        anim_text_wall_cost = GetComponent<Animator>();
         controls = new Controls(); //считываение пользовательского ввода
         controls.Player.Enable();
         controls.Player.Interact.performed += Interact_performed;
@@ -31,15 +34,18 @@ public class PlayerInteraction : MonoBehaviour
         //длина луча
         //out RaycastHit hit - информация о пересечении(ссылка на объект, до которого дотронулась)
         { //пересекаемся с объектом, с которым можно взаимодействовать
-                cursor.color = Color.white;
-                cursor.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                io = hit.transform.GetComponent<InteractableObject>();
+            cursor.color = Color.white;
+            cursor.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+            io = hit.transform.GetComponent<InteractableObject>();
+            //хочу чтобы появился текст про стоимость
+            anim_text_wall_cost.SetTrigger("fade");
         }
         else 
         { 
             io = null;
             cursor.color = Color.red;
             cursor.transform.localScale = new Vector3(1f, 1f, 1f);
+            anim_text_wall_cost.SetTrigger("fade");
         }
 
     }
