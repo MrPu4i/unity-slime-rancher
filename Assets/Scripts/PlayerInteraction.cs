@@ -13,6 +13,7 @@ public class PlayerInteraction : MonoBehaviour
     Controls controls;
     InteractableObject io;
     [SerializeField] Image cursor;
+    
 
     private void Start()
     {
@@ -24,6 +25,7 @@ public class PlayerInteraction : MonoBehaviour
     }
     private void Update()
     {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, distance) && hit.transform.CompareTag("Interact"))
         //некоторая функция которая выпускает луч, не пересекается
         //ли этот луч с какими-то объектами, если пересекается, возращает  true
@@ -34,18 +36,20 @@ public class PlayerInteraction : MonoBehaviour
         //длина луча
         //out RaycastHit hit - информация о пересечении(ссылка на объект, до которого дотронулась)
         { //пересекаемся с объектом, с которым можно взаимодействовать
+            Debug.DrawRay(ray.origin, ray.direction * distance, Color.green);
             cursor.color = Color.white;
             cursor.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
             io = hit.transform.GetComponent<InteractableObject>();
             //хочу чтобы появился текст про стоимость
-            anim_text_wall_cost.SetTrigger("fade");
+            //anim_text_wall_cost.SetTrigger("fade");
         }
         else 
-        { 
+        {
+            Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
             io = null;
             cursor.color = Color.red;
             cursor.transform.localScale = new Vector3(1f, 1f, 1f);
-            anim_text_wall_cost.SetTrigger("fade");
+            //anim_text_wall_cost.SetTrigger("fade");
         }
 
     }
