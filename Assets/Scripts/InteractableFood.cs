@@ -10,6 +10,7 @@ public class InteractableFood : InteractableObject
     {
         //что делаем, когда нажимаем ЛКМ
         inventoryManager.AddItem(item, amount);
+        Destroy(gameObject);
         //и удаляем объект :0
     }
 }

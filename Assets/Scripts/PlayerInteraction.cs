@@ -9,7 +9,7 @@ public class PlayerInteraction : MonoBehaviour
 
     [SerializeField] private Camera cam;
     [SerializeField] private float distance = 10f; //на каком рассто€нии можем взаимодействовать с объектом
-    private Animator anim_text_wall_cost;
+    [SerializeField] private Animator anim_text_wall_cost;
     Controls controls;
     InteractableObject io;
     [SerializeField] Image cursor;
@@ -18,7 +18,6 @@ public class PlayerInteraction : MonoBehaviour
     private void Start()
     {
         Console.WriteLine("лол");
-        anim_text_wall_cost = GetComponent<Animator>();
         controls = new Controls(); //считываение пользовательского ввода
         controls.Player.Enable();
         controls.Player.Interact.performed += Interact_performed;
@@ -41,7 +40,7 @@ public class PlayerInteraction : MonoBehaviour
             cursor.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
             io = hit.transform.GetComponent<InteractableObject>();
             //хочу чтобы по€вилс€ текст про стоимость
-            //anim_text_wall_cost.SetTrigger("fade");
+            anim_text_wall_cost.SetBool("fade 0", false);
         }
         else 
         {
@@ -50,6 +49,7 @@ public class PlayerInteraction : MonoBehaviour
             cursor.color = Color.red;
             cursor.transform.localScale = new Vector3(1f, 1f, 1f);
             //anim_text_wall_cost.SetTrigger("fade");
+            anim_text_wall_cost.SetBool("fade 0", true);
         }
 
     }
