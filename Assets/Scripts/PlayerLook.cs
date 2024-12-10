@@ -11,6 +11,7 @@ public class PlayerLook : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(StartLookLock());
         controls = new Controls();
         controls.Player.Enable();
 
@@ -29,5 +30,11 @@ public class PlayerLook : MonoBehaviour
         transform.localRotation = Quaternion.Euler(rotation, 0, 0);
 
         player.Rotate(Vector3.up * v.x);
+    }
+    IEnumerator StartLookLock()
+    {
+        enabled = false;
+        yield return new WaitForSeconds(2f);
+        enabled = true;
     }
 }

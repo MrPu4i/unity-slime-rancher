@@ -40,7 +40,10 @@ public class PlayerInteraction : MonoBehaviour
             cursor.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
             io = hit.transform.GetComponent<InteractableObject>();
             //хочу чтобы появился текст про стоимость
-            anim_text_wall_cost.SetBool("fade 0", false);
+            if (io is InteractableButton)
+            { 
+                anim_text_wall_cost.SetBool("fade", false);
+            }
         }
         else 
         {
@@ -48,8 +51,8 @@ public class PlayerInteraction : MonoBehaviour
             io = null;
             cursor.color = Color.red;
             cursor.transform.localScale = new Vector3(1f, 1f, 1f);
-            //anim_text_wall_cost.SetTrigger("fade");
-            anim_text_wall_cost.SetBool("fade 0", true);
+            anim_text_wall_cost.SetBool("fade", true);
+          
         }
 
     }
