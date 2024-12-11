@@ -10,10 +10,10 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private float distance = 10f; //на каком расстоянии можем взаимодействовать с объектом
     [SerializeField] private Animator anim_text_wall_cost;
-    Controls controls;
-    InteractableObject io;
     [SerializeField] Image cursor;
     
+    Controls controls;
+    InteractableObject io;
 
     private void Start()
     {

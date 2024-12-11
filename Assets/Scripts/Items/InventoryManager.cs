@@ -5,7 +5,7 @@ public class InventoryManager : MonoBehaviour
 {
     //получаение всех слотов в список(у меня 4 слота... крейзи
     [SerializeField] Transform quickInventory;
-    [SerializeField] List<InventorySlot> slots = new List<InventorySlot>();
+    [SerializeField] public List<InventorySlot> slots = new List<InventorySlot>();
 
     private void Start()
     {

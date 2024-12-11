@@ -1,15 +1,17 @@
 using TMPro;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
     //слот инвентаря
-    [SerializeField] public ItemScriptableObject item; //какой объект в слоте
+    [SerializeField] public ItemScriptableObject item; //какой объект в слоте, можем его достать
     [SerializeField] public float amount;
     public bool isEmpty = true;
     public GameObject iconGO;
     public TextMeshProUGUI text_amount;
+
     
 
     private void Start()
@@ -23,4 +25,5 @@ public class InventorySlot : MonoBehaviour
         iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 1); //выносим из прозрачности
         iconGO.GetComponent<Image>().sprite = icon; //вставляем иконку
     }
+    
 }
