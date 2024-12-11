@@ -10,6 +10,7 @@ public class InventorySlot : MonoBehaviour
     public bool isEmpty = true;
     public GameObject iconGO;
     public TextMeshProUGUI text_amount;
+    
 
     private void Start()
     {

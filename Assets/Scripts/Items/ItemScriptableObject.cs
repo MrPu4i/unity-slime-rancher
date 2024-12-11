@@ -8,4 +8,5 @@ public class ItemScriptableObject : ScriptableObject
     [SerializeField] string itemName;
     [SerializeField] public float maxAmount; //максимальное кол-во этого объекта в слоте
     [SerializeField] public Sprite icon;
+    [SerializeField] public GameObject itemPrefab;
 }
