@@ -26,6 +26,7 @@ public class InteractableObject : MonoBehaviour
     public virtual void Interact()
     {
         print("Interact with" + gameObject);
+
         //что происходит когда интерактимся    
         //виртуальный тк разные объекты делают разные вещи
     }

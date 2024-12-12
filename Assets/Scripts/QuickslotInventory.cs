@@ -14,6 +14,8 @@ public class QuickslotInventory : MonoBehaviour
     int currentQuickslotID = 0; //номер слота, который у нас выбран
     [SerializeField] Sprite selectedSprite;
     [SerializeField] Sprite notSelectedSprite;
+    [SerializeField] float throwForce = 10f; // Сила броска
+    [SerializeField] float throwUpwardForce = 5f; // Добавляет немного подъема
 
     InventorySlot cur_slot = null;
     Controls controls;
@@ -46,8 +48,6 @@ public class QuickslotInventory : MonoBehaviour
             // Берем предыдущий слот и меняем его картинку на "выбранную"
             quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = selectedSprite;
             // Что то делаем с предметом:
-            
-
         }
         if (mw > -0.1)
         {
@@ -101,13 +101,13 @@ public class QuickslotInventory : MonoBehaviour
     {
         //этот метод происходит тогда, когда мы нажимаем ЛКМ, и объект, который выбран в слоте у нас (item)
         //выбрасывается
-        print($"Ура по левой кнопке что-то происходит, наш предмет в слоте: {inventoryManager.slots[currentQuickslotID].item}"); //работает, он видит предмет
+        //print($"Ура по левой кнопке что-то происходит, наш предмет в слоте: {inventoryManager.slots[currentQuickslotID].item}"); //работает, он видит предмет
         DropItem(); //метод выбрасывания
     }
     private void DropItem()
     {
         cur_slot = inventoryManager.slots[currentQuickslotID];
-        print("Зашёл в DropItem");
+        //print("Зашёл в DropItem");
         //получить предмет из слота - inventoryManager.slots[currentQuickslotID].item
         if (cur_slot.item != null) //если в слота выбранном что-то есть, тогда делаем метод на ЛКМ
         {
@@ -118,8 +118,6 @@ public class QuickslotInventory : MonoBehaviour
             //Какой сейчас в руке. Эта информация - cur_slot
 
             Drop(); //просто хотим выкинуть предмет один
-            //надо перед игроком заспавнить префаб предмета, который выкидываем
-            //обнулить всё в слоте
         }
     }
     void Drop() //выбрасываем текущий объект
@@ -129,10 +127,10 @@ public class QuickslotInventory : MonoBehaviour
         cur_slot.item.itemPrefab.GetComponent<Rigidbody>().isKinematic = false;
         canPickUp = false;
         cur_slot.item.itemPrefab = null;*/
-
+        GameObject prefabForSpawn = cur_slot.item.itemPrefab;
         if (cur_slot.amount == 0) //значит у нас только 1 предмет
         {
-            cur_slot.item = null; //убираем скрипт предмета
+            cur_slot.item.itemPrefab = null;
             cur_slot.SetIcon(null, 0); //убираем иконку
             cur_slot.isEmpty = true; //ячейка пустая
             cur_slot.text_amount.text = "";
@@ -141,8 +139,40 @@ public class QuickslotInventory : MonoBehaviour
         {
             cur_slot.text_amount.text = cur_slot.amount.ToString(); //убираем текст
         }
+        
         //надо ещё, чтобы перед игроком появлялся префаб
-        print("Сейчас перед игроком должен появитсья префаб яблока выброшенного");
+        //print("Сейчас перед игроком должен появитсья префаб яблока выброшенного");
+
+        SpawnPrefab(prefabForSpawn);
+    }
+    void SpawnPrefab(GameObject _prefabForSpawn)
+    {
+        GameObject newObject = Instantiate(_prefabForSpawn, new Vector3(35, 30,-18), Quaternion.identity);
+        InteractableFood food = newObject.GetComponent<InteractableFood>();
+        if (food != null)
+        {
+            food.inventoryManager = inventoryManager;
+        }
+        else
+        {
+            Debug.LogError("MyNewObject Script not found on prefab");
+        }
+        Rigidbody rb = newObject.GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            Debug.LogError("Объект не имеет компонента Rigidbody!");
+            Destroy(newObject);
+            return;
+        }
+        rb.AddForce(Vector3.up * 10, ForceMode.Impulse);
+        //Vector3 mousePos = Input.mousePosition;
+        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 10)); // 10 - глубина. Можно подстроить под свой проект
+        //Vector3 throwDirection = (worldPos - transform.position).normalized;
+        // throwDirection.y += throwUpwardForce;
+
+        // Добавляем силу в направлении броска.
+        //rb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+        newObject.transform.parent = null;
     }
     void SetItemInHand() //этот метод тогда, когда нажимаем Е
     {
@@ -155,7 +185,6 @@ public class QuickslotInventory : MonoBehaviour
         cur_slot.item.itemPrefab.transform.localPosition = Vector3.zero;
         cur_slot.item.itemPrefab.transform.localEulerAngles = new Vector3(10f, 2f, 0f);
         canPickUp = true;
-
-        
     }
+
 }

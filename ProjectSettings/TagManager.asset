@@ -6,6 +6,7 @@ TagManager:
   tags:
   - shelter_wall
   - Interact
+  - food
   layers:
   - Default
   - TransparentFX
