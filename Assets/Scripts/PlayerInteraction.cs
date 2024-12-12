@@ -41,7 +41,7 @@ public class PlayerInteraction : MonoBehaviour
             io = hit.transform.GetComponent<InteractableObject>();
             //хочу чтобы появился текст про стоимость
             if (io is InteractableButton)
-            { 
+            {
                 anim_text_wall_cost.SetBool("fade", false);
             }
         }
