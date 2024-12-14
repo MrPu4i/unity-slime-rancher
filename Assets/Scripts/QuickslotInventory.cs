@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class QuickslotInventory : MonoBehaviour
 {
@@ -14,8 +13,9 @@ public class QuickslotInventory : MonoBehaviour
     int currentQuickslotID = 0; //номер слота, который у нас выбран
     [SerializeField] Sprite selectedSprite;
     [SerializeField] Sprite notSelectedSprite;
-    [SerializeField] float throwForce = 10f; // Сила броска
-    [SerializeField] float throwUpwardForce = 5f; // Добавляет немного подъема
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] Camera cam;
+
 
     InventorySlot cur_slot = null;
     Controls controls;
@@ -128,9 +128,10 @@ public class QuickslotInventory : MonoBehaviour
         canPickUp = false;
         cur_slot.item.itemPrefab = null;*/
         GameObject prefabForSpawn = cur_slot.item.itemPrefab;
+        print(prefabForSpawn);
         if (cur_slot.amount == 0) //значит у нас только 1 предмет
         {
-            cur_slot.item.itemPrefab = null;
+            cur_slot.item = null;
             cur_slot.SetIcon(null, 0); //убираем иконку
             cur_slot.isEmpty = true; //ячейка пустая
             cur_slot.text_amount.text = "";
@@ -147,44 +148,47 @@ public class QuickslotInventory : MonoBehaviour
     }
     void SpawnPrefab(GameObject _prefabForSpawn)
     {
-        GameObject newObject = Instantiate(_prefabForSpawn, new Vector3(35, 30,-18), Quaternion.identity);
-        InteractableFood food = newObject.GetComponent<InteractableFood>();
-        if (food != null)
+        Vector3 vectorForSpawn = cam.transform.position + cam.transform.forward * 2;
+        GameObject newObject = Instantiate(_prefabForSpawn, vectorForSpawn, Quaternion.identity);
+        if (newObject.GetComponent<FoodInteractable>())
         {
-            food.inventoryManager = inventoryManager;
+            FoodInteractable food = newObject.GetComponent<FoodInteractable>();
+            if (food != null)
+            {
+                food.inventoryManager = inventoryManager;
+            }
+            else
+            {
+                Debug.LogError("MyNewObject Script not found on prefab");
+            }
         }
         else
         {
-            Debug.LogError("MyNewObject Script not found on prefab");
+            PonyInteractable ponyIntr = newObject.GetComponent<PonyInteractable> ();
+            PonyBehavior ponyBeh = newObject.GetComponent<PonyBehavior>();
+            if (ponyIntr != null && ponyBeh != null)
+            {
+                ponyIntr.inventoryManager = inventoryManager;
+                ponyBeh.gameManager = gameManager;
+            }
+            else
+            {
+                Debug.LogError("MyNewObject Script not found on prefab");
+            }
         }
-        Rigidbody rb = newObject.GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            Debug.LogError("Объект не имеет компонента Rigidbody!");
-            Destroy(newObject);
-            return;
-        }
-        rb.AddForce(Vector3.up * 10, ForceMode.Impulse);
-        //Vector3 mousePos = Input.mousePosition;
-        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 10)); // 10 - глубина. Можно подстроить под свой проект
-        //Vector3 throwDirection = (worldPos - transform.position).normalized;
-        // throwDirection.y += throwUpwardForce;
-
-        // Добавляем силу в направлении броска.
-        //rb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
         newObject.transform.parent = null;
     }
-    void SetItemInHand() //этот метод тогда, когда нажимаем Е
-    {
-        if (canPickUp) Drop(); //Просто проверяет, если уже что-то есть, то выбрасываем
+    //void SetItemInHand() //этот метод тогда, когда нажимаем Е
+    //{
+    //    if (canPickUp) Drop(); //Просто проверяет, если уже что-то есть, то выбрасываем
 
 
-        //вот это всё для того, что бы поставить предмет в руку
-        cur_slot.item.itemPrefab.GetComponent<Rigidbody>().isKinematic = true;
-        cur_slot.item.itemPrefab.transform.parent = transform;
-        cur_slot.item.itemPrefab.transform.localPosition = Vector3.zero;
-        cur_slot.item.itemPrefab.transform.localEulerAngles = new Vector3(10f, 2f, 0f);
-        canPickUp = true;
-    }
+    //    //вот это всё для того, что бы поставить предмет в руку
+    //    cur_slot.item.itemPrefab.GetComponent<Rigidbody>().isKinematic = true;
+    //    cur_slot.item.itemPrefab.transform.parent = transform;
+    //    cur_slot.item.itemPrefab.transform.localPosition = Vector3.zero;
+    //    cur_slot.item.itemPrefab.transform.localEulerAngles = new Vector3(10f, 2f, 0f);
+    //    canPickUp = true;
+    //}
 
 }

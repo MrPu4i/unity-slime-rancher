@@ -7,6 +7,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] Transform quickInventory;
     [SerializeField] public List<InventorySlot> slots = new List<InventorySlot>();
 
+
     private void Start()
     {
         for (int i = 0; i < quickInventory.childCount; i++)
@@ -20,6 +21,8 @@ public class InventoryManager : MonoBehaviour
     }
     public void AddItem(ItemScriptableObject _item, float _amount)
     {
+        //звук поднятия
+        
         foreach (InventorySlot slot in slots)
         {
             if (slot.item == _item) //когда уже есть объект в инвентаре, и он тот же самый

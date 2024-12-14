@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,10 +8,14 @@ public class PlayerInteraction : MonoBehaviour
     //на игроке висит
     //будем смотреть в какой объект мы попали, и определять можем ли мы с кем-то взаимодействовать или нет
 
-    [SerializeField] private Camera cam;
-    [SerializeField] private float distance = 10f; //на каком расстоянии можем взаимодействовать с объектом
-    [SerializeField] private Animator anim_text_wall_cost;
+    [SerializeField] Camera cam;
+    [SerializeField] float distance = 10f; //на каком расстоянии можем взаимодействовать с объектом
+    [SerializeField] Animator anim_text_wall_cost;
+    [SerializeField] Animator anim_text_genshin;
+    [SerializeField] TextMeshProUGUI text_wall_cost;
     [SerializeField] Image cursor;
+    [SerializeField] InteractableButton but1;
+    [SerializeField] InteractableButton but2;
     
     Controls controls;
     InteractableObject io;
@@ -44,6 +49,10 @@ public class PlayerInteraction : MonoBehaviour
             {
                 anim_text_wall_cost.SetBool("fade", false);
             }
+            if (io is PCInteractable)
+            {
+                anim_text_genshin.SetBool("fade", false);
+            }
         }
         else 
         {
@@ -52,7 +61,8 @@ public class PlayerInteraction : MonoBehaviour
             cursor.color = Color.red;
             cursor.transform.localScale = new Vector3(1f, 1f, 1f);
             anim_text_wall_cost.SetBool("fade", true);
-          
+            anim_text_genshin.SetBool("fade", true);
+
         }
 
     }
